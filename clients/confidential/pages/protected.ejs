@@ -1,0 +1,18 @@
+<% include ./header %>
+
+<div>
+    <h1>Welcome <%= user.name %></h1>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel est vel urna tincidunt mattis. Pellentesque ex ex, vehicula ut lorem et, bibendum aliquet metus. Sed egestas enim velit, sit amet gravida nulla eleifend sed. Integer commodo ac massa eu fringilla. Suspendisse vel purus egestas, dapibus quam ut, pharetra elit. In vestibulum ac odio ac mattis. Praesent dolor lectus, pellentesque id nibh in, gravida faucibus neque. Quisque eleifend semper semper.
+    </p>
+
+
+    <h2>User info:</h2>
+    <ul>
+        <% Object.keys(user).forEach(function(key) { %>
+            <li><%= key %> - <%= user[key] %></li>
+        <% }); %>
+    </ul>
+</div>
+
+<% include ./footer %>
