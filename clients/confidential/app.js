@@ -11,7 +11,7 @@ const createApp = function ({ baseUrl }) {
   app.set('view engine', 'ejs');
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(session({
-    secret: 'keyboard cat',
+    secret: 'keyboard cat' + baseUrl,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true },
@@ -64,24 +64,30 @@ const createApp = function ({ baseUrl }) {
   app.post('/callback', async (req, res, next) => {
     try {
       const client = await getClient();
-      const callbackParams = client.callbackParams(req); // => parsed url query or body object
+      const callbackParams = client.callbackParams(req);
       const tokenSet = await client.callback(authSettings.base_url + '/callback', callbackParams, { code_verifier }) // => Promise
       const userInfo = await client.userinfo(tokenSet.access_token);
-      console.log('userinfo %j', userInfo);
-      console.log('received and validated tokens %j', tokenSet);
-      console.log('validated ID Token claims %j', tokenSet.claims());
 
       req.session.user = userInfo;
-      const returnTo = req.session.returnTo || '/';
-      res.redirect(returnTo);
+      req.session.claims = tokenSet.claims();
+      req.session.tokens = tokenSet;
+
+      res.redirect(req.session.returnTo || '/');
     } catch (err) {
       next(err);
     }
   });
 
-  app.get('/protected', protect(), (req, res) => res.render('protected', { user: req.session.user }));
+  app.get('/protected', protect(), (req, res) => res.render('protected', { 
+    user: req.session.user,
+    claims: req.session.claims,
+    tokens: req.session.tokens,
+  }));
+  
   app.get('/logout', (req, res) => {
     req.session.user = null;
+    req.session.tokens = null;
+    req.session.claims = null;
     res.redirect('/');
   });
 

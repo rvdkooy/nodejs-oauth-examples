@@ -1,4 +1,4 @@
-<% include ./header %>
+<% include ../partials/header %>
 
 <div>
     <h1>Welcome <%= user.name %></h1>
@@ -13,6 +13,20 @@
             <li><%= key %> - <%= user[key] %></li>
         <% }); %>
     </ul>
+
+    <h2>Claims:</h2>
+    <ul>
+        <% Object.keys(claims).forEach(function(key) { %>
+            <li><%= key %> - <%= claims[key] %></li>
+        <% }); %>
+    </ul>
+
+    <h2>Tokens:</h2>
+    <ul>
+        <% Object.keys(tokens).forEach(function(key) { %>
+            <li><%= key %> - <%= tokens[key] %></li>
+        <% }); %>
+    </ul>
 </div>
 
-<% include ./footer %>
+<% include ../partials/footer %>
